@@ -1,2 +1,3 @@
 # virutal enviroment
 venv/
+__pycache__
