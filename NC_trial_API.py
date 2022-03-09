@@ -38,13 +38,13 @@ def process_user_stats():
 def parse_users_list(data):
     users = []
     for elm in data['results']:
-        user = User(
-            elm["name"]["first"],
-            elm["name"]["last"],
-            elm["gender"],
-            elm["location"]["state"],
-            int(elm["dob"]["age"])
-        )
+        user = {
+            "first_name":elm["name"]["first"],
+            "last_name":elm["name"]["last"],
+            "gender":elm["gender"],
+            "state":elm["location"]["state"],
+            "age":int(elm["dob"]["age"])
+        }
         users.append(user)
 
     return users
