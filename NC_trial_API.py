@@ -31,12 +31,29 @@ def process_user_stats():
             else:
                 return 'unsupported mimetype'
 
+        save_txt_file(processed_data)
+
         res = processed_data
 
         return res
 
-
-
+def save_txt_file(data):
+    with open('test.txt', 'w') as f:
+        f.write('Percentage female versus male: {}%\n'.format(data['gender_distribution']['female']))
+        f.write('Percentage of first names that start with A-M versus N-Z: {}%\n'.format(data['first_name_distribution']['A_to_M']))
+        f.write('Percentage of last names that start with A-M versus N-Z: {}%\n'.format(data['last_name_distribution']['A_to_M']))
+        f.write('Percentage of people in each state (up to top ten popultaions): \n')
+        for state, percent in data['percentage_in_top_ten_most_populous_states'].items():
+            f.write(f'\t{state}: {percent}\n')
+        f.write('Percentage of females in each state (up to top ten popultaions): \n')
+        for state, percent in data['percentage_of_females_in_top_ten_most_populous_states'].items():
+            f.write(f'\t{state}: {percent}\n')
+        f.write('Percentage of males in each state (up to top ten popultaions): \n')
+        for state, percent in data['percentage_of_males_in_top_ten_most_populous_states'].items():
+            f.write(f'\t{state}: {percent}\n')
+        f.write('Percentage of people in age groups: \n')
+        for age, percent in data['age_distribution'].items():
+            f.write(f'\t{age}: {percent}\n')
 
 
 def parse_users_list(data):

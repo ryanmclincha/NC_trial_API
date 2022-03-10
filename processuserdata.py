@@ -148,8 +148,12 @@ class ProcessUserData():
         top_ten_dict = {}
 
         for state in top_ten:
-            if state["count"] > 0:
-                top_ten_dict.update({state["state"]: round((state["count"]/self.population)*100, 2)})
+            try:
+                percent = round((state["count"]/self.population)*100, 2)
+            except ZeroDivisionError:
+                percent = 0
+
+            top_ten_dict.update({state["state"]: percent})
 
         return top_ten_dict
 
@@ -171,8 +175,12 @@ class ProcessUserData():
         top_ten_dict = {}
 
         for state in top_ten:
-            if state["count"] > 0:
-                top_ten_dict.update({state["state"]: round((state["count"]/pop)*100, 2)})
+            try:
+                percent = round((state["count"]/pop)*100, 2)
+            except ZeroDivisionError:
+                percent = 0
+
+            top_ten_dict.update({state["state"]: percent})
 
         return top_ten_dict            
 

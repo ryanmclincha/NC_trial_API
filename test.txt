@@ -1,0 +1,43 @@
+Percentage female versus male: 100.0%
+Percentage of first names that start with A-M versus N-Z: 0.0%
+Percentage of last names that start with A-M versus N-Z: 100.0%
+Percentage of people in each state (up to top ten popultaions): 
+	California: 100.0
+	Alabama: 0.0
+	Alaska: 0.0
+	Arizona: 0.0
+	Arkansas: 0.0
+	Colorado: 0.0
+	Connecticut: 0.0
+	Delaware: 0.0
+	Florida: 0.0
+	Georgia: 0.0
+Percentage of females in each state (up to top ten popultaions): 
+	California: 100.0
+	Alabama: 0.0
+	Alaska: 0.0
+	Arizona: 0.0
+	Arkansas: 0.0
+	Colorado: 0.0
+	Connecticut: 0.0
+	Delaware: 0.0
+	Florida: 0.0
+	Georgia: 0.0
+Percentage of males in each state (up to top ten popultaions): 
+	Alabama: 0
+	Alaska: 0
+	Arizona: 0
+	Arkansas: 0
+	California: 0
+	Colorado: 0
+	Connecticut: 0
+	Delaware: 0
+	Florida: 0
+	Georgia: 0
+Percentage of people in age groups: 
+	age_0_to_20: 0.0
+	age_21_to_40: 100.0
+	age_41_to_60: 0.0
+	age_61_to_80: 0.0
+	age_81_to_100: 0.0
+	age_over_100: 0.0
