@@ -1,9 +1,10 @@
-from flask import Flask, Response, request
-from user import User
+from flask import Flask, Response, request, jsonify, send_file
 from processuserdata import ProcessUserData
+from dicttoxml import dicttoxml
+from random import randint
 import xmltodict
 import json
-
+from werkzeug.exceptions import UnsupportedMediaType
 
 
 app = Flask(__name__)
@@ -29,16 +30,37 @@ def process_user_stats():
 
                 processed_data = ProcessUserData(users).build_results()
             else:
-                return 'unsupported mimetype'
+                return 'Unsupported Media Type', 415
 
-        save_txt_file(processed_data)
+        elif 'application/json' in request.headers['Content-Type']:
+            data = json.load(f)
+            users = parse_users_list(data)
 
-        res = processed_data
+            processed_data = ProcessUserData(users).build_results()
+        elif 'application/xml' in request.headers['Content-Type']:
+            data = xmltodict.parse(f)['user']
+            users = parse_users_list(data)
+
+            processed_data = ProcessUserData(users).build_results()
+        else:
+            return 'Unsupported Media Type', 415  
+                
+        if 'application/json' in request.headers['Accept']:
+            res = processed_data
+        elif 'text/xml' in request.headers['Accept']:
+            xml = dicttoxml(processed_data)
+            res = Response(xml, mimetype='text/xml')
+        elif 'text/plain' in request.headers['Accept']:
+            x = randint(1, 100000)
+            save_txt_file(processed_data, x)
+            res = send_file('temp/plain_{}.txt'.format(x))
+        else:
+            res = processed_data
 
         return res
 
-def save_txt_file(data):
-    with open('test.txt', 'w') as f:
+def save_txt_file(data, num):
+    with open('temp/plain_{}.txt'.format(num), 'w') as f:
         f.write('Percentage female versus male: {}%\n'.format(data['gender_distribution']['female']))
         f.write('Percentage of first names that start with A-M versus N-Z: {}%\n'.format(data['first_name_distribution']['A_to_M']))
         f.write('Percentage of last names that start with A-M versus N-Z: {}%\n'.format(data['last_name_distribution']['A_to_M']))
@@ -69,7 +91,6 @@ def parse_users_list(data):
         users.append(user)
 
     return users
-
 
 if __name__ == '__main__':
     app.run(debug=True)
