@@ -1,3 +1,4 @@
+# class template for calculating user counts in each state
 class StateStatsCounter():
     def __init__(self):
         self.states = [
@@ -55,7 +56,7 @@ class StateStatsCounter():
 
 
 
-
+# The ProcessUserData class is built to process the data sent to the API
 class ProcessUserData():
     def __init__(self, data):
         self.data = data
@@ -76,6 +77,7 @@ class ProcessUserData():
 
         return result
 
+    # function for calculating the gender distribution amount the data set
     def get_gender_distribution(self):
         population = 0
         male = 0
@@ -94,13 +96,17 @@ class ProcessUserData():
             "female": round(100 - (male/population)*100, 2)
             }
 
+    #function for finding name distribution (the two functions could be combined TODO)
     def get_fname_distribution_AM_versus_NZ(self):
+        # uses python's built in TimSort to sort the data
         data_sorted = sorted(
             self.data, key=lambda i: str(i['first_name'])
         )
         count_a_to_m = 0
          
         # this could be faster with a binary search to get the index value of the last M name
+        # if time permits come back to this and use a lamda function to help speed this up
+        # current time complexity is not ideal for larger data sets
         for user in data_sorted:
             if user['first_name'] > 'M':
                 break
@@ -111,6 +117,7 @@ class ProcessUserData():
             "N_to_Z": round(100 - (count_a_to_m/self.population)*100, 2)
             }
 
+    # pretty close to identical to the first name distribution (the two functions could be combined TODO)
     def get_lname_distribution_AM_versus_NZ(self):
         data_sorted = sorted(
             self.data, key=lambda i: str(i['last_name'])
@@ -128,6 +135,7 @@ class ProcessUserData():
             "A_to_M": round((count_a_to_m/self.population)*100, 2),
             "N_to_Z": round(100 - (count_a_to_m/self.population)*100, 2)
             }
+
 
     def get_percentage_of_people_ten_most_populous_states(self):
         states_data = StateStatsCounter()
