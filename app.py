@@ -9,6 +9,10 @@ import json
 app = Flask(__name__)
 
 
+@app.route("/")
+def hello():
+    return 'hello'
+
 # Entry point for the API. 
 # The API endpoint can accept content types of multipart/form, application/xml, and application/json
 # If sent with multipart/form the API will search for the file's mimetype and process the data accodingly
@@ -106,4 +110,4 @@ def parse_users_list(data):
     return users
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
