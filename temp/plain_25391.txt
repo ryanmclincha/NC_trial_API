@@ -1,6 +1,6 @@
 Percentage female versus male: 49.72%
-Percentage of first names that start with A-M versus N-Z: 65.38%
-Percentage of last names that start with A-M versus N-Z: 53.92%
+Percentage of first names that start with A-M versus N-Z: 73.04%
+Percentage of last names that start with A-M versus N-Z: 62.46%
 Percentage of people in each state (up to top ten popultaions): 
 	Wyoming: 2.34
 	Maine: 2.32

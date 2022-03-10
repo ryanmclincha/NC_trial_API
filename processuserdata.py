@@ -1,3 +1,6 @@
+from audioop import reverse
+from bisect import bisect_left, bisect_right
+
 # class template for calculating user counts in each state
 class StateStatsCounter():
     def __init__(self):
@@ -115,24 +118,30 @@ class ProcessUserData():
         # if time permits come back to this and use a lamda function to help speed this up
         # current time complexity is not ideal for larger data sets
         for user in data_sorted:
-            if user[name] > 'M':
+            if user[name] > 'N':
                 break
             count_a_to_m += 1
 
+        index = binary_search_right_most(data_sorted, len(data_sorted), name, 'N')
+        if index == -1:
+            names_below_n = 0
+        else:
+            names_below_n = index
+
         return {
-            "A_to_M": round((count_a_to_m/self.population)*100, 2),
-            "N_to_Z": round(100 - (count_a_to_m/self.population)*100, 2)
+            "A_to_M": round((names_below_n/self.population)*100, 2),
+            "N_to_Z": round(100 - (names_below_n/self.population)*100, 2)
             }
 
+    # finds the population distribution among the top 10 states in data set
     def get_percentage_of_people_ten_most_populous_states(self):
         states_data = StateStatsCounter()
 
         # Refactor this if possible 
         for user in self.data:
             key = user['state']
-            for state in states_data.states:
-                if key in state.values():
-                    state["count"] +=1
+            i = binary_search_state_for_index(states_data.states, key)
+            states_data.states[i]['count'] += 1
 
         sorted_states = sorted(
             states_data.states, key=lambda i: int(i["count"]), reverse=True
@@ -215,8 +224,30 @@ class ProcessUserData():
         return results
 
 
-    
+def binary_search_right_most(a, n, key, target):
+    left = 0
+    right = n
+    while left < right:
+        i = (left + right) // 2
+        if a[i][key] > target:
+            right = i
+        else:
+            left = i + 1
+    return right 
 
+def binary_search_state_for_index(a, target):
+    left = 0
+    right = 49
+    i = (left + right) // 2
+    while a[i]['state'] != target:
+        i = (left + right) // 2
+        if a[i]['state'] == target:
+            return i
+        elif a[i]['state'] > target:
+            right = i
+        elif a[i]['state'] < target:
+            left = i + 1
+    return i
 
 
 
