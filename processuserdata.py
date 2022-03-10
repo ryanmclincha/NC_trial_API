@@ -66,13 +66,20 @@ class ProcessUserData():
 
     def build_results(self):
         result = {
-            "gender_distribution": self.get_gender_distribution(),
-            "first_name_distribution": self.get_fname_distribution_AM_versus_NZ(),
-            "last_name_distribution": self.get_lname_distribution_AM_versus_NZ(),
-            "percentage_in_top_ten_most_populous_states": self.get_percentage_of_people_ten_most_populous_states(),
-            "percentage_of_females_in_top_ten_most_populous_states": self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'female', self.females),
-            "percentage_of_males_in_top_ten_most_populous_states": self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'male', self.males),
-            "age_distribution": self.get_percentage_in_age_groups()
+            "gender_distribution": 
+                self.get_gender_distribution(),
+            "first_name_distribution": 
+                self.get_name_distribution_AM_versus_NZ('first_name'),
+            "last_name_distribution": 
+                self.get_name_distribution_AM_versus_NZ('last_name'),
+            "percentage_in_top_ten_most_populous_states": 
+                self.get_percentage_of_people_ten_most_populous_states(),
+            "percentage_of_females_in_top_ten_most_populous_states": 
+                self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'female', self.females),
+            "percentage_of_males_in_top_ten_most_populous_states": 
+                self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'male', self.males),
+            "age_distribution": 
+                self.get_percentage_in_age_groups()
             }
 
         return result
@@ -97,10 +104,10 @@ class ProcessUserData():
             }
 
     #function for finding name distribution (the two functions could be combined TODO)
-    def get_fname_distribution_AM_versus_NZ(self):
+    def get_name_distribution_AM_versus_NZ(self, name):
         # uses python's built in TimSort to sort the data
         data_sorted = sorted(
-            self.data, key=lambda i: str(i['first_name'])
+            self.data, key=lambda i: str(i[name])
         )
         count_a_to_m = 0
          
@@ -108,7 +115,7 @@ class ProcessUserData():
         # if time permits come back to this and use a lamda function to help speed this up
         # current time complexity is not ideal for larger data sets
         for user in data_sorted:
-            if user['first_name'] > 'M':
+            if user[name] > 'M':
                 break
             count_a_to_m += 1
 
@@ -116,26 +123,6 @@ class ProcessUserData():
             "A_to_M": round((count_a_to_m/self.population)*100, 2),
             "N_to_Z": round(100 - (count_a_to_m/self.population)*100, 2)
             }
-
-    # pretty close to identical to the first name distribution (the two functions could be combined TODO)
-    def get_lname_distribution_AM_versus_NZ(self):
-        data_sorted = sorted(
-            self.data, key=lambda i: str(i['last_name'])
-        )
-        count_a_to_m = 0
-         
-
-        # this could be faster with a binary search to get the index value of the last M name
-        for user in data_sorted:
-            if user['last_name'] > 'M':
-                break
-            count_a_to_m += 1
-
-        return {
-            "A_to_M": round((count_a_to_m/self.population)*100, 2),
-            "N_to_Z": round(100 - (count_a_to_m/self.population)*100, 2)
-            }
-
 
     def get_percentage_of_people_ten_most_populous_states(self):
         states_data = StateStatsCounter()
