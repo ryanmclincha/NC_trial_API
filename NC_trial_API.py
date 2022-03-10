@@ -35,6 +35,10 @@ def process_user_stats():
 
         return res
 
+
+
+
+
 def parse_users_list(data):
     users = []
     for elm in data['results']:

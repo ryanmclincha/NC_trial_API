@@ -62,7 +62,6 @@ class ProcessUserData():
         self.population = 0
         self.females = 0
         self.males = 0
-        self.top_tep_states_by_pop = []
 
     def build_results(self):
         result = {
@@ -70,8 +69,8 @@ class ProcessUserData():
             "first_name_distribution": self.get_fname_distribution_AM_versus_NZ(),
             "last_name_distribution": self.get_lname_distribution_AM_versus_NZ(),
             "percentage_in_top_ten_most_populous_states": self.get_percentage_of_people_ten_most_populous_states(),
-            "percentage_of_females_in_top_ten_most_populous_states": self.get_percentage_of_females_in_ten_most_populous_states(),
-            "percentage_of_males_in_top_ten_most_populous_states": self.get_percentage_of_males_in_ten_most_populous_states(),
+            "percentage_of_females_in_top_ten_most_populous_states": self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'female', self.females),
+            "percentage_of_males_in_top_ten_most_populous_states": self.get_percentage_of_gender_in_ten_most_populous_states('gender', 'male', self.males),
             "age_distribution": self.get_percentage_in_age_groups()
             }
 
@@ -82,7 +81,7 @@ class ProcessUserData():
         male = 0
 
         for elm in self.data:
-            if elm.gender == "male":
+            if elm['gender'] == "male":
                 male += 1
             population += 1
 
@@ -97,12 +96,13 @@ class ProcessUserData():
 
     def get_fname_distribution_AM_versus_NZ(self):
         data_sorted = sorted(
-            self.data, key=lambda i: str(i.fname)
+            self.data, key=lambda i: str(i['first_name'])
         )
         count_a_to_m = 0
          
+        # this could be faster with a binary search to get the index value of the last M name
         for user in data_sorted:
-            if user.fname[0] > 'M':
+            if user['first_name'] > 'M':
                 break
             count_a_to_m += 1
 
@@ -113,12 +113,14 @@ class ProcessUserData():
 
     def get_lname_distribution_AM_versus_NZ(self):
         data_sorted = sorted(
-            self.data, key=lambda i: str(i.lname)
+            self.data, key=lambda i: str(i['last_name'])
         )
         count_a_to_m = 0
          
+
+        # this could be faster with a binary search to get the index value of the last M name
         for user in data_sorted:
-            if user.lname[0] > 'M':
+            if user['last_name'] > 'M':
                 break
             count_a_to_m += 1
 
@@ -132,7 +134,7 @@ class ProcessUserData():
 
         # Refactor this if possible 
         for user in self.data:
-            key = user.state
+            key = user['state']
             for state in states_data.states:
                 if key in state.values():
                     state["count"] +=1
@@ -146,18 +148,18 @@ class ProcessUserData():
         top_ten_dict = {}
 
         for state in top_ten:
-            top_ten_dict.update({state["state"]: round((state["count"]/self.population)*100, 2)})
-            self.top_tep_states_by_pop.append(state["state"])
+            if state["count"] > 0:
+                top_ten_dict.update({state["state"]: round((state["count"]/self.population)*100, 2)})
 
         return top_ten_dict
 
-    def get_percentage_of_females_in_ten_most_populous_states(self):
+    def get_percentage_of_gender_in_ten_most_populous_states(self, key, val, pop):
         states_data = StateStatsCounter()
 
         for user in self.data:
-            key = user.state
+            user_state = user['state']
             for state in states_data.states:
-                if key in state.values() and key in self.top_tep_states_by_pop and user.gender == 'female':
+                if user_state in state.values() and user[key] == val:
                     state["count"] +=1
 
         sorted_states = sorted(
@@ -169,37 +171,10 @@ class ProcessUserData():
         top_ten_dict = {}
 
         for state in top_ten:
-            top_ten_dict.update({state["state"]: round((state["count"]/self.females)*100, 2)})
+            if state["count"] > 0:
+                top_ten_dict.update({state["state"]: round((state["count"]/pop)*100, 2)})
 
         return top_ten_dict            
-
-
-    def get_percentage_of_males_in_ten_most_populous_states(self):
-        states_data = StateStatsCounter()
-
-        for user in self.data:
-            key = user.state
-            for state in states_data.states:
-                if key in state.values() and key in self.top_tep_states_by_pop and user.gender == 'male':
-                    state["count"] +=1
-
-        sorted_states = sorted(
-            states_data.states, key=lambda i: int(i["count"]), reverse=True
-        )
-
-        top_ten = sorted_states[0:10]
-
-        top_ten_dict = {}
-
-
-        for state in top_ten:
-            try:
-                percent = round((state["count"]/self.males)*100, 2)
-            except ZeroDivisionError:
-                percent = 0
-            top_ten_dict.update({state["state"]: percent})
-
-        return top_ten_dict
 
     def get_percentage_in_age_groups(self):
         age_0_to_20 = 0
@@ -210,17 +185,17 @@ class ProcessUserData():
         age_over_100 = 0
 
         for user in self.data:
-            if user.age >= 0 and user.age <=20:
+            if user['age'] >= 0 and user['age'] <=20:
                 age_0_to_20 += 1
-            elif user.age >= 21 and user.age <=40: 
+            elif user['age'] >= 21 and user['age'] <=40: 
                 age_21_to_40 += 1   
-            elif user.age >= 41 and user.age <=60:
+            elif user['age'] >= 41 and user['age'] <=60:
                 age_41_to_60 += 1
-            elif user.age >= 61 and user.age <=80:
+            elif user['age'] >= 61 and user['age'] <=80:
                 age_61_to_80 += 1
-            elif user.age >= 81 and user.age <=100:
+            elif user['age'] >= 81 and user['age'] <=100:
                 age_81_to_100 += 1
-            elif user.age >= 101:
+            elif user['age'] >= 101:
                 age_over_100 += 1
             else: 
                 continue
