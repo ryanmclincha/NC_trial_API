@@ -2,6 +2,7 @@ from flask import Flask, Response, request, send_file
 from processuserdata import ProcessUserData
 from dicttoxml import dicttoxml
 from random import randint
+from requests import get
 import xmltodict
 import json
 import os
@@ -10,10 +11,11 @@ import io
 
 app = Flask(__name__)
 
-# quick test endpoint
+# quick test endpoint to see what ips on my swarm receive the request
 @app.route("/")
 def hello():
-    return 'hello'
+    ip = get('https://api.ipify.org').content.decode('utf8')
+    return f'hello from Ryan McLincha\'s Swarm node at {ip}'
 
 # Entry point for the API. 
 # The API endpoint can accept content types of multipart/form, application/xml, and application/json

@@ -60,7 +60,7 @@ class StateStatsCounter():
 class ProcessUserData():
     def __init__(self, data):
         self.data = data
-        self.population = 0
+        self.population = len(data)
         self.females = 0
         self.males = 0
 
@@ -87,23 +87,20 @@ class ProcessUserData():
 
     # function for calculating the gender distribution amount the data set
     def get_gender_distribution(self):
-        population = 0
         male = 0
 
         # calculates the male population and the total population
         for elm in self.data:
             if elm['gender'] == "male":
                 male += 1
-            population += 1
 
-        self.population = population
         self.males = male
-        self.females = population - male
+        self.females = self.population - male
 
         # return a dictionary with the gender distribution
         return {
-            "male": round((male/population)*100, 2),
-            "female": round(100 - (male/population)*100, 2)
+            "male": round((male/self.population)*100, 2),
+            "female": round(100 - (male/self.population)*100, 2)
             }
 
     #function for finding name distribution for the specified name type
