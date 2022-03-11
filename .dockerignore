@@ -1,5 +1,7 @@
 venv/
+test_files/
 instance/
 __pycache__
 .git
 .cache
+test_*
