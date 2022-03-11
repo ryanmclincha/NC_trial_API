@@ -1,1 +1,0 @@
-# cleans up old results files sent by the API after a certain amount of time
