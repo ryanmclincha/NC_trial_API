@@ -1,6 +1,3 @@
-from audioop import reverse
-from bisect import bisect_left, bisect_right
-
 # class template for calculating user counts in each state
 class StateStatsCounter():
     def __init__(self):
@@ -67,6 +64,7 @@ class ProcessUserData():
         self.females = 0
         self.males = 0
 
+    # build a results dictionary to be processed by the app to be sent back to the user
     def build_results(self):
         result = {
             "gender_distribution": 
@@ -92,6 +90,7 @@ class ProcessUserData():
         population = 0
         male = 0
 
+        # calculates the male population and the total population
         for elm in self.data:
             if elm['gender'] == "male":
                 male += 1
@@ -101,27 +100,20 @@ class ProcessUserData():
         self.males = male
         self.females = population - male
 
+        # return a dictionary with the gender distribution
         return {
             "male": round((male/population)*100, 2),
             "female": round(100 - (male/population)*100, 2)
             }
 
-    #function for finding name distribution (the two functions could be combined TODO)
+    #function for finding name distribution for the specified name type
     def get_name_distribution_AM_versus_NZ(self, name):
         # uses python's built in TimSort to sort the data
         data_sorted = sorted(
             self.data, key=lambda i: str(i[name])
-        )
-        count_a_to_m = 0
-         
-        # this could be faster with a binary search to get the index value of the last M name
-        # if time permits come back to this and use a lamda function to help speed this up
-        # current time complexity is not ideal for larger data sets
-        for user in data_sorted:
-            if user[name] > 'N':
-                break
-            count_a_to_m += 1
+        )       
 
+        # binary search on sorted data to find amount of users A-M
         index = binary_search_right_most(data_sorted, len(data_sorted), name, 'N')
         if index == -1:
             names_below_n = 0
@@ -137,20 +129,23 @@ class ProcessUserData():
     def get_percentage_of_people_ten_most_populous_states(self):
         states_data = StateStatsCounter()
 
-        # Refactor this if possible 
+        # count the users from each state
         for user in self.data:
             key = user['state']
             i = binary_search_state_for_index(states_data.states, key)
             states_data.states[i]['count'] += 1
 
+        # sort based on the state population in the data set
         sorted_states = sorted(
             states_data.states, key=lambda i: int(i["count"]), reverse=True
         )
 
+        # slice list to top ten states
         top_ten = sorted_states[0:10]
 
         top_ten_dict = {}
 
+        # get the data set population distribution for top ten states in data set
         for state in top_ten:
             try:
                 percent = round((state["count"]/self.population)*100, 2)
@@ -161,19 +156,23 @@ class ProcessUserData():
 
         return top_ten_dict
 
+    # the population distribution among the specified key value, pair, and population type
+    # for example key="gender" val="female" and pop=the total female population
     def get_percentage_of_gender_in_ten_most_populous_states(self, key, val, pop):
         states_data = StateStatsCounter()
 
+        # count the specified user key matching a value for a given population
         for user in self.data:
-            user_state = user['state']
-            for state in states_data.states:
-                if user_state in state.values() and user[key] == val:
-                    state["count"] +=1
+            if user[key] == val:
+                state = user['state']
+                i = binary_search_state_for_index(states_data.states, state)
+                states_data.states[i]['count'] += 1        
 
         sorted_states = sorted(
             states_data.states, key=lambda i: int(i["count"]), reverse=True
         )
 
+        # top ten states by key value population
         top_ten = sorted_states[0:10]
 
         top_ten_dict = {}
@@ -188,6 +187,7 @@ class ProcessUserData():
 
         return top_ten_dict            
 
+    # calculates the amount of users by age group
     def get_percentage_in_age_groups(self):
         age_0_to_20 = 0
         age_21_to_40 = 0
@@ -212,6 +212,7 @@ class ProcessUserData():
             else: 
                 continue
         
+        # format for the results to be returned
         results = {
             "age_0_to_20": round((age_0_to_20/self.population)*100, 2),
             "age_21_to_40": round((age_21_to_40/self.population)*100, 2),
@@ -224,6 +225,8 @@ class ProcessUserData():
         return results
 
 
+# helps find the highest string value up to a target
+# used to find how many users with names starting with A-M and N-Z
 def binary_search_right_most(a, n, key, target):
     left = 0
     right = n
@@ -235,6 +238,8 @@ def binary_search_right_most(a, n, key, target):
             left = i + 1
     return right 
 
+
+# matches state to in target to state in the states data list object
 def binary_search_state_for_index(a, target):
     left = 0
     right = 49
