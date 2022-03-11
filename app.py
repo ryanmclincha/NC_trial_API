@@ -15,7 +15,7 @@ app = Flask(__name__)
 @app.route("/")
 def hello():
     ip = get('https://api.ipify.org').content.decode('utf8')
-    return f'hello from Ryan McLincha\'s Swarm node at {ip}'
+    return f'hello from Ryan\'s Swarm node at {ip}'
 
 # Entry point for the API. 
 # The API endpoint can accept content types of multipart/form, application/xml, and application/json
