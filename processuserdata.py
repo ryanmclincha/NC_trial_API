@@ -111,7 +111,7 @@ class ProcessUserData():
         )       
 
         # binary search on sorted data to find amount of users A-M
-        index = binary_search_right_most(data_sorted, len(data_sorted), name, 'N')
+        index = binary_search_right_most(data_sorted, name, 'N')
         if index == -1:
             names_below_n = 0
         else:
@@ -224,12 +224,12 @@ class ProcessUserData():
 
 # helps find the highest string value up to a target
 # used to find how many users with names starting with A-M and N-Z
-def binary_search_right_most(a, n, key, target):
+def binary_search_right_most(data, key, target):
     left = 0
-    right = n
+    right = len(data)
     while left < right:
         i = (left + right) // 2
-        if a[i][key] > target:
+        if data[i][key] > target:
             right = i
         else:
             left = i + 1
