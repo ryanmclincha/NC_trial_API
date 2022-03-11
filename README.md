@@ -42,7 +42,7 @@ http://node1.ryanmclincha.com:5000/NC_trialAPI
 http://node2.ryanmclincha.com:5000/NC_trialAPI
 http://node3.ryanmclincha.com:5000/NC_trialAPI
 
-It is currently running on a three node docker swarm. NC_trial_API was designed with portability and horizontal scalability in mind.
+NC_trial_API is currently running on a three node docker swarm and was designed with portability and horizontal scalability in mind. If you would like to test the public API endpoints you can send POST requests with your prefered API test client such as Postman or Insomnia. 
 
 
 
