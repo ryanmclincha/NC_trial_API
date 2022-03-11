@@ -17,7 +17,7 @@ run flask
 
 ## Usage
 
-The application exposes an endpoint of "/NC_trialAPI" on port 5000 on the hosting machine. Send a post request containing user data from https://randomuser.me/api/
+The application exposes an endpoint of "/NC_trialAPI" on port 5000 on the host machine. Send a post request containing user data from https://randomuser.me/api/
 
 ### User Data Format
 
