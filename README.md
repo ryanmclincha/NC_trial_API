@@ -37,10 +37,8 @@ The application will decide which format to respond with based on the 'Accept' h
 If hosting the application locally 'POST' requests with the relevant request data can be made to the endpoint 
 http://localhost:5000/NC_trialAPI
 
-NC_trial_API is also hosted publicly at the following URL endpoints:
+NC_trial_API is also hosted publicly at the following URL endpoint:
 http://node1.ryanmclincha.com:5000/NC_trialAPI
-http://node2.ryanmclincha.com:5000/NC_trialAPI
-http://node3.ryanmclincha.com:5000/NC_trialAPI
 
 NC_trial_API is currently running on a three node docker swarm and was designed with portability and horizontal scalability in mind. If you would like to test the public API endpoints you can send POST requests with your prefered API test client such as Postman or Insomnia. 
 
